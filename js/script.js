@@ -1,80 +1,43 @@
-// Garshain Website JavaScript
-
+// Garshain Blog JavaScript
 document.addEventListener('DOMContentLoaded', function() {
-    // Mobile Menu Toggle
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks = document.querySelector('.nav-links');
+    // Mobile menu toggle
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
     
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', function() {
-            navLinks.classList.toggle('active');
-        });
-    }
-    
-    // Language Toggle
-    const languageToggle = document.querySelector('.language-toggle');
-    
-    if (languageToggle) {
-        languageToggle.addEventListener('click', function() {
-            document.body.classList.toggle('rtl');
-            
-            // Toggle between English and Arabic content
-            const currentLang = languageToggle.getAttribute('data-lang');
-            
-            if (currentLang === 'en') {
-                languageToggle.setAttribute('data-lang', 'ar');
-                languageToggle.querySelector('span').textContent = 'English';
-                
-                // Switch to Arabic content
-                document.querySelectorAll('[data-en]').forEach(element => {
-                    const arContent = element.getAttribute('data-ar');
-                    element.setAttribute('data-en-temp', element.innerHTML);
-                    element.innerHTML = arContent;
-                });
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            const icon = mobileMenuToggle.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
             } else {
-                languageToggle.setAttribute('data-lang', 'en');
-                languageToggle.querySelector('span').textContent = 'العربية';
-                
-                // Switch to English content
-                document.querySelectorAll('[data-en]').forEach(element => {
-                    element.innerHTML = element.getAttribute('data-en-temp') || element.getAttribute('data-en');
-                });
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
             }
         });
     }
     
-    // FAQ Accordion
-    const faqQuestions = document.querySelectorAll('.faq-question');
+    // Category filter functionality
+    const categoryItems = document.querySelectorAll('.category-item');
     
-    faqQuestions.forEach(question => {
-        question.addEventListener('click', function() {
-            const answer = this.nextElementSibling;
+    categoryItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Remove active class from all items
+            categoryItems.forEach(cat => cat.classList.remove('active'));
             
-            // Toggle active class
-            this.classList.toggle('active');
-            answer.classList.toggle('active');
-        });
-    });
-    
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
+            // Add active class to clicked item
+            this.classList.add('active');
             
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
+            // Here you would typically filter posts based on category
+            // For demo purposes, we'll just log the selected category
+            console.log('Selected category:', this.textContent);
             
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80, // Adjust for header height
-                    behavior: 'smooth'
-                });
-                
-                // Close mobile menu if open
-                if (navLinks.classList.contains('active')) {
-                    navLinks.classList.remove('active');
-                }
-            }
+            // In a real implementation, you would:
+            // 1. Get the category name
+            // 2. Hide all posts that don't match the category
+            // 3. Show posts that match the category
+            // 4. If "All" is selected, show all posts
         });
     });
     
@@ -84,41 +47,55 @@ document.addEventListener('DOMContentLoaded', function() {
     if (newsletterForm) {
         newsletterForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
             const emailInput = this.querySelector('input[type="email"]');
-            const email = emailInput.value.trim();
+            const email = emailInput.value;
             
-            if (email && isValidEmail(email)) {
-                // Show success message (in real implementation, this would send data to server)
-                alert('Thank you for subscribing to our newsletter!');
-                emailInput.value = '';
-            } else {
-                alert('Please enter a valid email address.');
-            }
+            // Here you would typically send the email to a server
+            // For demo purposes, we'll just log it and show a success message
+            console.log('Subscribed email:', email);
+            
+            // Clear the input
+            emailInput.value = '';
+            
+            // Show success message (in a real implementation)
+            alert('Thank you for subscribing to our newsletter!');
         });
     }
     
-    // Helper function to validate email
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-    
-    // Animate elements on scroll
-    const animateElements = document.querySelectorAll('.animate-on-scroll');
-    
-    function checkScroll() {
-        animateElements.forEach(element => {
-            const elementTop = element.getBoundingClientRect().top;
-            const windowHeight = window.innerHeight;
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
             
-            if (elementTop < windowHeight - 100) {
-                element.classList.add('animated');
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
             }
         });
-    }
+    });
     
-    // Initial check and add scroll event listener
-    checkScroll();
-    window.addEventListener('scroll', checkScroll);
+    // Lazy loading images (simple implementation)
+    if ('IntersectionObserver' in window) {
+        const lazyImages = document.querySelectorAll('img[data-src]');
+        
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+        
+        lazyImages.forEach(img => {
+            imageObserver.observe(img);
+        });
+    }
 });
