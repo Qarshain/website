@@ -175,54 +175,72 @@
     </section>
  
     
-    <!-- Waitlist Section -->
-    <section id="waitlist" class="waitlist section">
-        <div class="container">
-            <h2 class="section-title" data-en="Join Our Waitlist" data-ar="انضم إلى قائمة الانتظار">Join Our Waitlist</h2>
-            <p class="section-subtitle" {text-align: center;} data-en="Be the first to access our AI-driven, Shariah-compliant lending platform" data-ar="كن أول من يصل إلى منصة الإقراض المتوافقة مع الشريعة والمدعومة بالذكاء الاصطناعي">Be the first to access our AI-driven, Shariah-compliant lending platform</p>
-            
-            <!-- Garshain Waitlist Form - WITH PHONE NUMBER FIELD -->
-            <div id="garshain-waitlist-container" style="max-width: 500px; margin: 20px auto;">
-                <iframe 
-                    src="https://p9hwiqcl8m5v.manus.space/embed.html" 
-                    width="100%" 
-                    height="650" 
-                    frameborder="0" 
-                    scrolling="no"
-                    style="border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);"
-                    id="garshain-waitlist-iframe">
-                </iframe>
-            </div>
+<!-- Waitlist Section -->
+<section id="waitlist" class="waitlist section">
+  <div class="container">
+    <h2 class="section-title" data-en="Join Our Waitlist" data-ar="انضم إلى قائمة الانتظار">Join Our Waitlist</h2>
+    <p class="section-subtitle" style="text-align: center;" data-en="Be the first to access our AI-driven, Shariah-compliant lending platform" data-ar="كن أول من يصل إلى منصة الإقراض المتوافقة مع الشريعة والمدعومة بالذكاء الاصطناعي">
+      Be the first to access our AI-driven, Shariah-compliant lending platform
+    </p>
 
-            <script>
-            // Auto-resize iframe based on content
-            window.addEventListener('message', function(event) {
-                if (event.data.type === 'garshain_resize_iframe') {
-                    const iframe = document.getElementById('garshain-waitlist-iframe');
-                    if (iframe) {
-                        iframe.style.height = event.data.height + 'px';
-                    }
-                }
-                
-                // Handle successful signup
-                if (event.data.type === 'garshain_waitlist_success') {
-                    console.log('Waitlist signup successful:', event.data.data);
-                    // Add your analytics tracking here
-                }
-            });
+    <!-- Garshain Waitlist Form -->
+    <div id="garshain-waitlist-container" style="max-width: 500px; margin: 20px auto;">
+      <form id="waitlist-form" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <label for="name">Full Name / الاسم الكامل *</label>
+        <input type="text" id="name" name="name" required style="width:100%; padding:10px; margin-bottom:10px;">
 
-            // Handle referral codes from URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const ref = urlParams.get('ref');
-            if (ref) {
-                const iframe = document.getElementById('garshain-waitlist-iframe');
-                const currentSrc = iframe.src;
-                iframe.src = currentSrc + (currentSrc.includes('?') ? '&' : '?') + 'ref=' + ref;
-            }
-            </script>
-        </div>
-    </section>
-    
+        <label for="email">Email Address / البريد الإلكتروني *</label>
+        <input type="email" id="email" name="email" required style="width:100%; padding:10px; margin-bottom:10px;">
+
+        <label for="phone">Phone Number / رقم الجوال (اختياري)</label>
+        <input type="tel" id="phone" name="phone" style="width:100%; padding:10px; margin-bottom:10px;">
+
+        <label for="interest">I am interested in / أنا مهتم بـ *</label>
+        <select id="interest" name="interest" required style="width:100%; padding:10px; margin-bottom:20px;">
+          <option value="">Select an option / اختر خياراً</option>
+          <option value="Borrower">Borrower / مقترض</option>
+          <option value="Lender">Lender / مُقرِض</option>
+          <option value="Both">Both / الاثنين معاً</option>
+        </select>
+
+        <button type="submit" style="width:100%; background-color:#2d7d46; color:#fff; padding:12px; border:none; border-radius:8px; font-weight:bold;">
+          JOIN WAITLIST / انضم إلى قائمة الانتظار
+        </button>
+      </form>
+    </div>
+
+    <script>
+      document.getElementById("waitlist-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = {
+          name: form.name.value,
+          email: form.email.value,
+          phone: form.phone.value,
+          interest: form.interest.value
+        };
+
+        fetch("https://script.google.com/macros/s/AKfycby9oCzCnVPH8q1JbLR5V3qHn0Sk5eFKXuhDGUTuPG5zZXMEQ16m4ef5aohfXzNy5k_-/exec", {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(res => res.json())
+        .then(response => {
+          alert("Thank you! / شكراً لك! You've been added to the waitlist / تم إضافتك إلى قائمة الانتظار.");
+          form.reset();
+        })
+        .catch(error => {
+          alert("Error! Please try again. / حدث خطأ! الرجاء المحاولة مرة أخرى.");
+          console.error("Error:", error);
+        });
+      });
+    </script>
+  </div>
+</section>
+
   
     <!-- FAQ Section -->
     <section id="faq" class="faq section">
