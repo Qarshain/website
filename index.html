@@ -174,102 +174,122 @@
         </div>
     </section>
  
-    
-<!-- Garshain Waitlist Form -->
-<div id="garshain-waitlist-container" style="max-width: 500px; margin: 20px auto;">
+<!-- Waitlist Section -->
+<section id="waitlist" class="waitlist section">
+    <div class="container">
+        <h2 class="section-title" data-en="Join Our Waitlist" data-ar="انضم إلى قائمة الانتظار">Join Our Waitlist</h2>
+        <p class="section-subtitle" style="text-align: center;" data-en="Be the first to access our AI-driven, Shariah-compliant lending platform" data-ar="كن أول من يصل إلى منصة الإقراض المتوافقة مع الشريعة والمدعومة بالذكاء الاصطناعي">
+            Be the first to access our AI-driven, Shariah-compliant lending platform
+        </p>
+        <!-- Waitlist Form (no iframe, full control) -->
+        <div id="garshain-waitlist-container" style="max-width: 500px; margin: 20px auto;">
+            <form id="waitlist-form" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <label for="name" data-en="Full Name *" data-ar="الاسم الكامل *">Full Name *</label>
+                <input type="text" id="name" name="name" required style="width:100%; padding:10px; margin-bottom:10px;">
 
-  <!-- Language Switcher -->
-  <div style="text-align: right; margin-bottom: 10px;">
-    <button id="lang-toggle" type="button" style="background: #eee; border: 1px solid #ccc; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
-      العربية
-    </button>
-  </div>
+                <label for="email" data-en="Email Address *" data-ar="البريد الإلكتروني *">Email Address *</label>
+                <input type="email" id="email" name="email" required style="width:100%; padding:10px; margin-bottom:10px;">
 
-  <form id="waitlist-form" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-    <label for="name" data-en="Full Name *" data-ar="الاسم الكامل *">Full Name *</label>
-    <input type="text" id="name" name="name" required style="width:100%; padding:10px; margin-bottom:10px;">
+                <label for="phone" data-en="Phone Number (Optional)" data-ar="رقم الجوال (اختياري)">Phone Number (Optional)</label>
+                <input type="tel" id="phone" name="phone" style="width:100%; padding:10px; margin-bottom:10px;">
 
-    <label for="email" data-en="Email Address *" data-ar="البريد الإلكتروني *">Email Address *</label>
-    <input type="email" id="email" name="email" required style="width:100%; padding:10px; margin-bottom:10px;">
+                <label for="interest" data-en="I am interested in *" data-ar="أنا مهتم بـ *">I am interested in *</label>
+                <select id="interest" name="interest" required style="width:100%; padding:10px; margin-bottom:20px;">
+                    <option value="" data-en="Select an option" data-ar="اختر خياراً">Select an option</option>
+                    <option value="Borrower" data-en="Borrower" data-ar="مقترض">Borrower</option>
+                    <option value="Lender" data-en="Lender" data-ar="مُقرِض">Lender</option>
+                </select>
 
-    <label for="phone" data-en="Phone Number (Optional)" data-ar="رقم الجوال (اختياري)">Phone Number (Optional)</label>
-    <input type="tel" id="phone" name="phone" style="width:100%; padding:10px; margin-bottom:10px;">
+                <button type="submit" id="submit-button" data-en="JOIN WAITLIST" data-ar="انضم إلى قائمة الانتظار"
+                  style="width:100%; background-color:#2d7d46; color:#fff; padding:12px; border:none; border-radius:8px; font-weight:bold;">
+                  JOIN WAITLIST
+                </button>
+            </form>
+        </div>
 
-    <label for="interest" data-en="I am interested in *" data-ar="أنا مهتم بـ *">I am interested in *</label>
-    <select id="interest" name="interest" required style="width:100%; padding:10px; margin-bottom:20px;">
-      <option value="" data-en="Select an option" data-ar="اختر خياراً">Select an option</option>
-      <option value="Borrower" data-en="Borrower" data-ar="مقترض">Borrower</option>
-      <option value="Lender" data-en="Lender" data-ar="مُقرِض">Lender</option>
-    </select>
-
-    <button type="submit" id="submit-button" data-en="JOIN WAITLIST" data-ar="انضم إلى قائمة الانتظار"
-      style="width:100%; background-color:#2d7d46; color:#fff; padding:12px; border:none; border-radius:8px; font-weight:bold;">
-      JOIN WAITLIST
-    </button>
-  </form>
-</div>
-
-<script>
-  let currentLang = 'en';
-
-  document.getElementById("lang-toggle").addEventListener("click", function () {
-    currentLang = currentLang === 'en' ? 'ar' : 'en';
-    this.textContent = currentLang === 'en' ? 'العربية' : 'English';
-
-    document.querySelectorAll('[data-en]').forEach(el => {
-      const newText = el.getAttribute(`data-${currentLang}`);
-      if (el.tagName === 'OPTION') {
-        el.textContent = newText;
-      } else if (el.tagName === 'BUTTON' || el.tagName === 'LABEL') {
-        el.textContent = newText;
-      }
-    });
-  });
-
-  document.getElementById("waitlist-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    const form = e.target;
-    const data = {
-      name: form.name.value,
-      email: form.email.value,
-      phone: form.phone.value,
-      interest: form.interest.value
-    };
-
-    fetch("https://script.google.com/macros/s/AKfycby9oCzCnVPH8q1JbLR5V3qHn0Sk5eFKXuhDGUTuPG5zZXMEQ16m4ef5aohfXzNy5k_-/exec", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then(async res => {
-      const text = await res.text();
-      console.log("Raw server response:", text);
-      try {
-        const response = JSON.parse(text);
-        if (response.result === "success") {
-          alert(currentLang === 'ar'
-            ? "شكراً لك! تم إضافتك إلى قائمة الانتظار."
-            : "Thank you! You've been added to the waitlist.");
-          form.reset();
-        } else {
-          alert((currentLang === 'ar' ? "خطأ في الخادم: " : "Server error: ") + response.message);
+        <script>
+        // Helper function to update form language
+        function updateFormLang(lang) {
+            document.querySelectorAll("#waitlist-form [data-en]").forEach(el => {
+                el.textContent = el.getAttribute('data-' + lang);
+            });
+            // Also update placeholders if you want
+            document.getElementById('name').setAttribute('placeholder', lang === 'ar' ? 'الاسم الكامل' : 'Full Name');
+            document.getElementById('email').setAttribute('placeholder', lang === 'ar' ? 'البريد الإلكتروني' : 'Email Address');
+            document.getElementById('phone').setAttribute('placeholder', lang === 'ar' ? 'رقم الجوال (اختياري)' : 'Phone Number (Optional)');
         }
-      } catch (e) {
-        alert(currentLang === 'ar'
-          ? "مشكلة في تحليل الرد من الخادم"
-          : "Response parsing error");
-      }
-    })
-    .catch(async (error) => {
-      const responseText = await error.text?.();
-      alert((currentLang === 'ar'
-        ? "خطأ في الاتصال بالخادم: "
-        : "Fetch error: ") + (responseText || error.message));
-    });
-  });
-</script>
+
+        // Watch global language toggle (example: body[data-lang] or window.lang variable)
+        function getCurrentLang() {
+            // Option 1: If your site uses a global JS variable `lang`
+            if (window.lang) return window.lang;
+            // Option 2: If your site sets the <body data-lang="ar">
+            if (document.body.getAttribute('data-lang')) return document.body.getAttribute('data-lang');
+            // Default to English
+            return 'en';
+        }
+
+        // Initialize with current lang
+        updateFormLang(getCurrentLang());
+
+        // Listen for language change (site's toggle should fire this event!)
+        window.addEventListener('languageChange', function(e) {
+            updateFormLang(getCurrentLang());
+        });
+
+        // Optional: For automatic update if you change the body data attribute
+        const bodyObserver = new MutationObserver(function() {
+            updateFormLang(getCurrentLang());
+        });
+        bodyObserver.observe(document.body, { attributes: true, attributeFilter: ['data-lang'] });
+
+        // Form submission code
+        document.getElementById("waitlist-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const form = e.target;
+            const data = {
+                name: form.name.value,
+                email: form.email.value,
+                phone: form.phone.value,
+                interest: form.interest.value
+            };
+
+            fetch("https://script.google.com/macros/s/AKfycby9oCzCnVPH8q1JbLR5V3qHn0Sk5eFKXuhDGUTuPG5zZXMEQ16m4ef5aohfXzNy5k_-/exec", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(async res => {
+                const text = await res.text();
+                try {
+                    const response = JSON.parse(text);
+                    if (response.result === "success") {
+                        alert(getCurrentLang() === 'ar'
+                            ? "شكراً لك! تم إضافتك إلى قائمة الانتظار."
+                            : "Thank you! You've been added to the waitlist.");
+                        form.reset();
+                    } else {
+                        alert((getCurrentLang() === 'ar'
+                            ? "خطأ في الخادم: "
+                            : "Server error: ") + response.message);
+                    }
+                } catch (e) {
+                    alert(getCurrentLang() === 'ar'
+                        ? "مشكلة في تحليل الرد من الخادم"
+                        : "Response parsing error");
+                }
+            })
+            .catch(async (error) => {
+                const responseText = await error.text?.();
+                alert((getCurrentLang() === 'ar'
+                    ? "خطأ في الاتصال بالخادم: "
+                    : "Fetch error: ") + (responseText || error.message));
+            });
+        });
+        </script>
+    </div>
+</section>
+
 
   
     <!-- FAQ Section -->
