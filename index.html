@@ -177,30 +177,55 @@
     
 <!-- Garshain Waitlist Form -->
 <div id="garshain-waitlist-container" style="max-width: 500px; margin: 20px auto;">
+
+  <!-- Language Switcher -->
+  <div style="text-align: right; margin-bottom: 10px;">
+    <button id="lang-toggle" type="button" style="background: #eee; border: 1px solid #ccc; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+      العربية
+    </button>
+  </div>
+
   <form id="waitlist-form" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-    <label for="name">Full Name / الاسم الكامل *</label>
+    <label for="name" data-en="Full Name *" data-ar="الاسم الكامل *">Full Name *</label>
     <input type="text" id="name" name="name" required style="width:100%; padding:10px; margin-bottom:10px;">
 
-    <label for="email">Email Address / البريد الإلكتروني *</label>
+    <label for="email" data-en="Email Address *" data-ar="البريد الإلكتروني *">Email Address *</label>
     <input type="email" id="email" name="email" required style="width:100%; padding:10px; margin-bottom:10px;">
 
-    <label for="phone">Phone Number / رقم الجوال (اختياري)</label>
+    <label for="phone" data-en="Phone Number (Optional)" data-ar="رقم الجوال (اختياري)">Phone Number (Optional)</label>
     <input type="tel" id="phone" name="phone" style="width:100%; padding:10px; margin-bottom:10px;">
 
-    <label for="interest">I am interested in / أنا مهتم بـ *</label>
+    <label for="interest" data-en="I am interested in *" data-ar="أنا مهتم بـ *">I am interested in *</label>
     <select id="interest" name="interest" required style="width:100%; padding:10px; margin-bottom:20px;">
-      <option value="">Select an option / اختر خياراً</option>
-      <option value="Borrower">Borrower / مقترض</option>
-      <option value="Lender">Lender / مُقرِض</option>
+      <option value="" data-en="Select an option" data-ar="اختر خياراً">Select an option</option>
+      <option value="Borrower" data-en="Borrower" data-ar="مقترض">Borrower</option>
+      <option value="Lender" data-en="Lender" data-ar="مُقرِض">Lender</option>
     </select>
 
-    <button type="submit" style="width:100%; background-color:#2d7d46; color:#fff; padding:12px; border:none; border-radius:8px; font-weight:bold;">
-      JOIN WAITLIST / انضم إلى قائمة الانتظار
+    <button type="submit" id="submit-button" data-en="JOIN WAITLIST" data-ar="انضم إلى قائمة الانتظار"
+      style="width:100%; background-color:#2d7d46; color:#fff; padding:12px; border:none; border-radius:8px; font-weight:bold;">
+      JOIN WAITLIST
     </button>
   </form>
 </div>
 
 <script>
+  let currentLang = 'en';
+
+  document.getElementById("lang-toggle").addEventListener("click", function () {
+    currentLang = currentLang === 'en' ? 'ar' : 'en';
+    this.textContent = currentLang === 'en' ? 'العربية' : 'English';
+
+    document.querySelectorAll('[data-en]').forEach(el => {
+      const newText = el.getAttribute(`data-${currentLang}`);
+      if (el.tagName === 'OPTION') {
+        el.textContent = newText;
+      } else if (el.tagName === 'BUTTON' || el.tagName === 'LABEL') {
+        el.textContent = newText;
+      }
+    });
+  });
+
   document.getElementById("waitlist-form").addEventListener("submit", function (e) {
     e.preventDefault();
     const form = e.target;
@@ -219,19 +244,29 @@
       }
     })
     .then(async res => {
-      const response = await res.json();
-      if (response.result === "success") {
-        alert("Thank you! / شكراً لك! You've been added to the waitlist / تم إضافتك إلى قائمة الانتظار.");
-        form.reset();
-      } else {
-        alert("Server error: " + response.message + " / خطأ في الخادم: " + response.message);
-        console.error("Server error:", response.message);
+      const text = await res.text();
+      console.log("Raw server response:", text);
+      try {
+        const response = JSON.parse(text);
+        if (response.result === "success") {
+          alert(currentLang === 'ar'
+            ? "شكراً لك! تم إضافتك إلى قائمة الانتظار."
+            : "Thank you! You've been added to the waitlist.");
+          form.reset();
+        } else {
+          alert((currentLang === 'ar' ? "خطأ في الخادم: " : "Server error: ") + response.message);
+        }
+      } catch (e) {
+        alert(currentLang === 'ar'
+          ? "مشكلة في تحليل الرد من الخادم"
+          : "Response parsing error");
       }
     })
     .catch(async (error) => {
       const responseText = await error.text?.();
-      alert("Script error: " + responseText + " / حدث خطأ في الخادم");
-      console.error("Detailed script error:", responseText);
+      alert((currentLang === 'ar'
+        ? "خطأ في الاتصال بالخادم: "
+        : "Fetch error: ") + (responseText || error.message));
     });
   });
 </script>
