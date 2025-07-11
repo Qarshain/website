@@ -175,18 +175,22 @@
     </section>
  
 <!-- Waitlist Section  -->
-<form id="waitlist-form">
-  <input type="text" name="name" placeholder="Full Name" required>
-  <input type="email" name="email" placeholder="Email Address" required>
-  <input type="tel" name="phone" placeholder="Phone Number (optional)">
-  <select name="interest" required>
-    <option value="">Select an option</option>
-    <option value="Borrower">Borrower</option>
-    <option value="Lender">Lender</option>
-    <option value="Both">Both</option>
+
+
+<form id="waitlist-form" style="max-width: 400px; margin: 40px auto; display: flex; flex-direction: column; gap: 16px; background: #fff; padding: 28px 20px 24px 20px; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.07);">
+  <input type="text" name="name" placeholder="Full Name / الاسم الكامل" required style="padding: 10px; border-radius: 7px; border: 1px solid #ccc; font-size: 16px;">
+  <input type="email" name="email" placeholder="Email Address / البريد الإلكتروني" required style="padding: 10px; border-radius: 7px; border: 1px solid #ccc; font-size: 16px;">
+  <input type="tel" name="phone" placeholder="Phone Number (optional) / رقم الجوال (اختياري)" style="padding: 10px; border-radius: 7px; border: 1px solid #ccc; font-size: 16px;">
+  <select name="interest" required style="padding: 10px; border-radius: 7px; border: 1px solid #ccc; font-size: 16px;">
+    <option value="">Select an option / اختر خياراً</option>
+    <option value="Borrower">Borrower / مقترض</option>
+    <option value="Lender">Lender / مُقرِض</option>
   </select>
-  <button type="submit">Join Waitlist</button>
+  <button type="submit" style="padding: 12px; border-radius: 8px; background-color: #2d7d46; color: #fff; border: none; font-size: 18px; font-weight: bold; margin-top: 6px;">
+    Join Waitlist / انضم إلى قائمة الانتظار
+  </button>
 </form>
+
 <script>
 document.getElementById("waitlist-form").addEventListener("submit", function (e) {
   e.preventDefault();
@@ -196,7 +200,8 @@ document.getElementById("waitlist-form").addEventListener("submit", function (e)
       "Name": form.name.value,
       "Email": form.email.value,
       "Phone": form.phone.value,
-      "Interest": form.interest.value
+      // Make sure this matches your actual Airtable field name!
+      "Interest": form.interest.value 
     }
   };
   fetch("https://api.airtable.com/v0/appOoUlGfY9zESarG/Table%201", {
@@ -210,20 +215,20 @@ document.getElementById("waitlist-form").addEventListener("submit", function (e)
   .then(res => res.json())
   .then(response => {
     if (response.id) {
-      alert("Thank you! You've been added to the waitlist.");
+      alert("Thank you! You've been added to the waitlist.\nشكراً لك! تم إضافتك إلى قائمة الانتظار.");
       form.reset();
     } else {
-      alert("Error: " + JSON.stringify(response));
+      alert("Error: " + JSON.stringify(response) + "\nحدث خطأ: " + JSON.stringify(response));
     }
   })
   .catch(error => {
-    alert("Network or server error. Please try again.");
+    alert("Network or server error. Please try again.\nخطأ في الاتصال أو الخادم. الرجاء المحاولة مرة أخرى.");
     console.error(error);
   });
 });
 </script>
 
-
+   
 
   
     <!-- FAQ Section -->
