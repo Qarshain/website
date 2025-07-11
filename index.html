@@ -176,54 +176,134 @@
  
 <!-- Waitlist Section  -->
 
+<section id="waitlist" class="waitlist section">
+  <div class="container">
+    <h2 class="section-title"
+        data-en="Join Our Waitlist"
+        data-ar="انضم إلى قائمة الانتظار">Join Our Waitlist</h2>
+    <p class="section-subtitle"
+        style="text-align: center;"
+        data-en="Be the first to access our AI-driven, Shariah-compliant lending platform"
+        data-ar="كن أول من يصل إلى منصة الإقراض المتوافقة مع الشريعة والمدعومة بالذكاء الاصطناعي">
+        Be the first to access our AI-driven, Shariah-compliant lending platform
+    </p>
 
-<form id="waitlist-form" style="max-width: 400px; margin: 40px auto; display: flex; flex-direction: column; gap: 16px; background: #fff; padding: 28px 20px 24px 20px; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.07);">
-  <input type="text" name="name" placeholder="Full Name / الاسم الكامل" required style="padding: 10px; border-radius: 7px; border: 1px solid #ccc; font-size: 16px;">
-  <input type="email" name="email" placeholder="Email Address / البريد الإلكتروني" required style="padding: 10px; border-radius: 7px; border: 1px solid #ccc; font-size: 16px;">
-  <input type="tel" name="phone" placeholder="Phone Number (optional) / رقم الجوال (اختياري)" style="padding: 10px; border-radius: 7px; border: 1px solid #ccc; font-size: 16px;">
-  <select name="interest" required style="padding: 10px; border-radius: 7px; border: 1px solid #ccc; font-size: 16px;">
-    <option value="">Select an option / اختر خياراً</option>
-    <option value="Borrower">Borrower / مقترض</option>
-    <option value="Lender">Lender / مُقرِض</option>
-  </select>
-  <button type="submit" style="padding: 12px; border-radius: 8px; background-color: #2d7d46; color: #fff; border: none; font-size: 18px; font-weight: bold; margin-top: 6px;">
-    Join Waitlist / انضم إلى قائمة الانتظار
-  </button>
-</form>
+    <form id="waitlist-form" style="max-width:400px; margin:30px auto; display:flex; flex-direction:column; gap:14px; background:#fff; border-radius:14px; box-shadow:0 4px 24px rgba(0,0,0,0.08); padding:24px;">
+      <input type="text" name="name" required
+        data-en-placeholder="Full Name"
+        data-ar-placeholder="الاسم الكامل"
+        placeholder="Full Name"
+        style="padding:10px; border-radius:7px; border:1px solid #ccc; font-size:16px;">
+      <input type="email" name="email" required
+        data-en-placeholder="Email Address"
+        data-ar-placeholder="البريد الإلكتروني"
+        placeholder="Email Address"
+        style="padding:10px; border-radius:7px; border:1px solid #ccc; font-size:16px;">
+      <input type="tel" name="phone"
+        data-en-placeholder="Phone Number (optional)"
+        data-ar-placeholder="رقم الجوال (اختياري)"
+        placeholder="Phone Number (optional)"
+        style="padding:10px; border-radius:7px; border:1px solid #ccc; font-size:16px;">
+      <select name="interest" required style="padding:10px; border-radius:7px; border:1px solid #ccc; font-size:16px;">
+        <option value="" data-en="Select an option" data-ar="اختر خياراً">Select an option</option>
+        <option value="Borrower" data-en="Borrower" data-ar="مقترض">Borrower</option>
+        <option value="Lender" data-en="Lender" data-ar="مُقرِض">Lender</option>
+        <option value="Both" data-en="Both" data-ar="كلاهما">Both</option>
+      </select>
+      <button type="submit" id="waitlist-btn"
+        data-en="Join Waitlist"
+        data-ar="انضم إلى قائمة الانتظار"
+        style="padding:12px; border-radius:8px; background-color:#2d7d46; color:#fff; border:none; font-size:18px; font-weight:bold;">
+        Join Waitlist
+      </button>
+    </form>
+  </div>
+</section>
 
 <script>
-document.getElementById("waitlist-form").addEventListener("submit", function (e) {
-  e.preventDefault();
-  const form = e.target;
-  const data = {
-    "fields": {
-      "Name": form.name.value,
-      "Email": form.email.value,
-      "Phone": form.phone.value,
-      // Make sure this matches your actual Airtable field name!
-      "Interest": form.interest.value 
+// =========== Language Toggle Helpers ===========
+function getLang() {
+  // Option 1: window.lang
+  if (window.lang) return window.lang;
+  // Option 2: body[data-lang]
+  return document.body.getAttribute('data-lang') || 'en';
+}
+function updateWaitlistLang(lang) {
+  // Update headings
+  document.querySelectorAll('[data-en][data-ar]').forEach(el => {
+    el.textContent = el.getAttribute('data-' + lang);
+  });
+  // Update input placeholders
+  document.querySelectorAll('#waitlist-form input').forEach(el => {
+    if (el.hasAttribute('data-en-placeholder') && el.hasAttribute('data-ar-placeholder')) {
+      el.placeholder = el.getAttribute('data-' + lang + '-placeholder');
     }
-  };
-  fetch("https://api.airtable.com/v0/appOoUlGfY9zESarG/Table%201", {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer pat9PmTn3mz1tFaqE.e2e7082573df4d60e47339c21a86aa4b6876c1219f863edcfc0aa696f58b400e",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  })
-  .then(res => res.json())
-  .then(response => {
-    if (response.id) {
-      alert("Thank you! You've been added to the waitlist.\nشكراً لك! تم إضافتك إلى قائمة الانتظار.");
-      form.reset();
-    } else {
-      alert("Error: " + JSON.stringify(response) + "\nحدث خطأ: " + JSON.stringify(response));
+  });
+  // Update select options
+  document.querySelectorAll('#waitlist-form select option').forEach(el => {
+    if (el.hasAttribute('data-en') && el.hasAttribute('data-ar')) {
+      el.textContent = el.getAttribute('data-' + lang);
     }
-  })
-  .catch(error => {
-    alert("Network or server error. Please try again.\nخطأ في الاتصال أو الخادم. الرجاء المحاولة مرة أخرى.");
-    console.error(error);
+  });
+  // Update button text
+  const btn = document.getElementById('waitlist-btn');
+  if (btn) btn.textContent = btn.getAttribute('data-' + lang);
+  // Switch direction for Arabic
+  document.getElementById('waitlist-form').style.direction = (lang === 'ar' ? 'rtl' : 'ltr');
+}
+function listenForLangChange() {
+  window.addEventListener('languageChange', function() {
+    updateWaitlistLang(getLang());
+  });
+  // React to body[data-lang] change
+  new MutationObserver(() => updateWaitlistLang(getLang()))
+    .observe(document.body, {attributes: true, attributeFilter: ['data-lang']});
+}
+document.addEventListener("DOMContentLoaded", function() {
+  updateWaitlistLang(getLang());
+  listenForLangChange();
+
+  document.getElementById("waitlist-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const lang = getLang();
+    const form = e.target;
+    // ======= Airtable Integration ==========
+    const data = {
+      "fields": {
+        // Make sure these field names EXACTLY match your Airtable column names!
+        "Name": form.name.value,
+        "Email": form.email.value,
+        "Phone": form.phone.value,
+        "Interest": form.interest.value
+      }
+    };
+    fetch("https://api.airtable.com/v0/appOoUlGfY9zESarG/Table%201", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer pat9PmTn3mz1tFaqE.e2e7082573df4d60e47339c21a86aa4b6876c1219f863edcfc0aa696f58b400e",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(response => {
+      if (response.id) {
+        alert(lang === 'ar'
+          ? 'شكراً لك! تم إضافتك إلى قائمة الانتظار.'
+          : 'Thank you! You\'ve been added to the waitlist.');
+        form.reset();
+      } else {
+        alert((lang === 'ar'
+          ? "حدث خطأ: "
+          : "Error: ") + JSON.stringify(response));
+      }
+    })
+    .catch(error => {
+      alert(lang === 'ar'
+        ? "خطأ في الاتصال أو الخادم. الرجاء المحاولة مرة أخرى."
+        : "Network or server error. Please try again.");
+      console.error(error);
+    });
   });
 });
 </script>
